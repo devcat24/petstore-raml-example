@@ -1,0 +1,8 @@
+%RAML 1.0 Trait
+displayName: X-CORRELATION-ID
+headers:
+  X-Correlation-ID: 
+    description: A Correlation ID passed from client to API-Led layers for traceability. It must be unique id.
+    type: string
+    minLength: 5
+    required: true

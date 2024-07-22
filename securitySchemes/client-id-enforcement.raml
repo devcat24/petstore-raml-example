@@ -1,0 +1,14 @@
+#%RAML 1.0 SecurityScheme
+type: x-custom-security
+description: Custom Security Headers
+describedBy:
+  headers:
+    client_id:
+      description: Client Id for Authentication
+      type: string
+    client_secret:
+      description: Client Secret for Authentication
+      type: string
+  responses:
+    401:
+      description: "Unauthorized Access"

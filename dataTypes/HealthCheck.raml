@@ -1,0 +1,20 @@
+#%RAML 1.0 DataType
+type: !include ./Status.raml
+properties:
+  resultMessage:
+    type: object
+    properties:  
+      severity:
+        type: string
+        enum: [INFO,WARN,ERROR]
+        example: INFO
+      code:
+        type: string
+        enum: [HEALTHY,UNHEALTHY]
+        example: HEALTHY
+      message:
+        type: string
+        example: Healthy
+      at: 
+        type: datetime
+        example: 2023-02-09T06:06:49.29975+09:00

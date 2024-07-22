@@ -1,0 +1,13 @@
+{
+  "main": "petstore.raml",
+  "name": "petstore-raml-api",
+  "groupId": "003797b2-3171-4ae2-8f23-bca6985c9bd7",
+  "assetId": "petstore-raml-api",
+  "version": "1.0.3",
+  "classifier": "raml",
+  "tags": [],
+  "descriptorVersion": "1.0.0",
+  "organizationId": "003797b2-3171-4ae2-8f23-bca6985c9bd7",
+  "apiVersion": "v1",
+  "originalFormatVersion": "1.0"
+}

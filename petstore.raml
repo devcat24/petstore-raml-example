@@ -1,0 +1,132 @@
+#%RAML 1.0
+title: Petstore Example API
+version: 1.0.1
+baseUri: /
+#baseUri: http://petstore-{env}.yourcompany.co.nz/
+# baseUriParameters:
+#   env:
+#     enum:
+#       - dev
+#       - test
+#       - uat
+mediaType: 
+  - application/json
+
+# uses:
+#   dCommon: ./exchange_modules/a2315c464-6d3c-214d-8z13-2acd63acd85c/d-common/1.0.1/common.raml
+
+securitySchemes:
+  # do not use 'client-id-enforcement/jwt-validation' for 'securitySchemes' -> use traits
+  # clientIdEnforcement: !include securitySchemes/client-id-enforcement.raml
+  basicAuth: !include securitySchemes/basic-auth.raml
+  oauth2: !include securitySchemes/oauth2.raml
+ 
+traits:
+  correlationId: !include /traits/x-correlation-id.raml
+  jsonType: !include /traits/content-types.raml 
+  errorResponse: !include /traits/error-response.raml
+  clientIdEnforcement: !include traits/client-id-trait.raml
+  jwtValidationHeader: !include traits/jwt-validation-header.raml
+  
+types:
+  #ErrorResponse: dCommon.ErrorResponse
+  Bird: !include ./dataTypes/bird.raml
+  Pet: !include ./dataTypes/pet.raml
+  Pets:
+    type: array
+    items:
+      type: Pet
+
+# 'securitySchemes' -> use 'securedBy', 'traits' -> use 'is'  
+# securedBy:
+#   - basicAuth
+#   - clientIdEnforcement
+
+
+/pets:
+  get:
+    displayName: listPets
+    is: [ clientIdEnforcement ]
+    # securedBy:
+    #   - clientIdEnforcement
+    queryParameters:
+      limit:
+        description: How many items to return at one time (max 100)
+        required: false
+        type: number
+        maximum: 100
+        format: int32
+    responses:
+      "200":
+        description: A paged array of pets
+        headers:
+          x-next?:
+            description: A link to the next page of responses
+            type: string
+        body:
+          application/json: 
+#            type: Pets
+            example: !include ./examples/pet-examples.raml
+
+  post:
+    displayName: Create a new Pet
+    is: [ clientIdEnforcement ]
+    # securedBy:
+    #   - clientIdEnforcement
+    body:
+      type: Pet
+    responses:
+      "201":
+        description: Created
+      "200":
+        description: Expected response to a valid request
+        body:
+          application/json: Pet
+#       "401":
+#         description: Unauthorized
+#         body:
+#           application/json: trait_client-id-required_401
+#       "500":
+#         description: Bad Request
+#         body:
+#           application/json: trait_client-id-required_500
+#       "501":
+#         description: unexpected error
+#         body:
+#           application/json: Error
+/pets/{petId}:
+  get:
+    is: [clientIdEnforcement]
+    displayName: Get Pet by Id
+    responses:
+      "200":
+        description: Fetch status of Pet
+        body:
+          application/json: 
+            type: Pet
+            example: !include ./examples/bulldog.json
+
+
+/pets/{petId}/status:           
+  get:
+    is: [clientIdEnforcement, errorResponse]
+    displayName: Display Pet status
+    # securedBy:
+    #   - clientIdEnforcement
+    responses:
+      "200":
+        description: Fetch status of Pet
+        body:
+          application/json: 
+            type: Pet
+ 
+/healthcheck:
+  is: [clientIdEnforcement, correlationId]
+  get:
+    displayName: GET API Healthcheck
+    description: Check access to API
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include dataTypes/HealthCheck.raml

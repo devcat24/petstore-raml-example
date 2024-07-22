@@ -1,0 +1,28 @@
+#%RAML 1.0 SecurityScheme
+type: OAuth 2.0
+description: |
+  OAuth 2.0 security required
+describedBy:
+  headers:
+    Authorization:
+      description: |
+        OAuth 2.0 access token.
+        Do not use together with the "access_token" query parameter.
+      type: string
+  queryParameters:
+    access_token:
+      description: |
+        Provide OAuth 2 access token. 
+        Do not use together with the "Authorization" header.
+      type: string
+  responses:
+      401:
+          description: |
+              Bad or expired token.
+      403:
+          description: |
+              Bad OAuth request.
+settings:
+  authorizationUri: http://0.0.0.0:8081/authorize
+  accessTokenUri: http://0.0.0.0:8081/access-token
+  authorizationGrants: [client_credentials]
